@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<div mat-dialog-content>
+  <img [src]="data.thumbnail" [alt]="data.title"/>
+</div>
+
+<div mat-dialog-actions>
+  <mat-form-field appearance="fill">
+    <mat-label>Download quality</mat-label>
+    <mat-select name="format" [(ngModel)]="selectedFormat">
+      <mat-option *ngFor="let format of data.formats" [value]="format">
+        {{ getFormatName(format) }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="download()">Download</button>
+</div>

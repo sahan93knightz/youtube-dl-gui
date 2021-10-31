@@ -1,0 +1,9 @@
+<div id="main">
+  <mat-form-field (keyup.enter)="go()">
+    <mat-label>Paster your URL here</mat-label>
+    <input matInput [(ngModel)]="url" name="url"/>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary">Add</button>
+</div>
+

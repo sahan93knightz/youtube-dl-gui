@@ -1,0 +1,11 @@
+#main {
+  height: 100%;
+  padding: 1em;
+  align-items: baseline;
+  display: flex;
+}
+
+#main > mat-form-field {
+  flex: 1 0 auto;
+  margin-right: 0.5em;
+}
