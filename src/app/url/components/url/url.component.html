@@ -4,6 +4,7 @@
     <input matInput [(ngModel)]="url" name="url"/>
   </mat-form-field>
 
-  <button mat-raised-button color="primary">Add</button>
+  <button mat-raised-button color="primary" (click)="go()">Add</button>
 </div>
 
+<app-download-summary></app-download-summary>

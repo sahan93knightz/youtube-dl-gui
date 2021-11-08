@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ifError } from 'assert';
 import * as _ from 'lodash';
-import { InitDownloadDialogComponent } from '../../../init-download-dialog/init-download-dialog.component';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { YoutubeDlInfo } from '../../../shared/models/youtube-dl-info.model';
 import { ElectronService } from '../electron/electron.service';
 
@@ -13,33 +13,18 @@ export class YoutubeDlService {
   constructor(private electronService: ElectronService) {
   }
 
-  async getInfo(url: string): Promise<YoutubeDlInfo> {
-    let output = '';
-    const exitCode = await this.electronService
-      .execute('youtube-dl', ['-j', url], '', (o) => {
-        output += o;
-      });
-    if (exitCode !== 0) {
-      throw new Error(`Youtube-dl exit with errors: ${output}`);
-    }
-    return this.toCamel(JSON.parse(output));
+  getInfo(url: string): Observable<YoutubeDlInfo> {
+    return this.electronService
+      .execute('youtube-dl', ['-j', url])
+      .pipe(
+        map((v: { code: string; data: string }) => this.toCamel(JSON.parse(v.data))),
+        catchError((v: { code: string; data: string }) => of(v))
+      );
   }
 
   async download(url: string, format: string, location?: string, outputFilenameFormat?: string) {
-    console.log(url, format);
-    let output = '';
-    const exitCode = await this.electronService
-      .execute('youtube-dl',
-        [
-          // '-o', './downloads/',
-          '-f', format, url
-        ], './downloads', (o) => {
-          output += o;
-        });
-    if (exitCode !== 0) {
-      throw new Error(`Youtube-dl exit with errors: ${output}`);
-    }
-    return output;
+    return this.electronService
+      .execute('youtube-dl', ['-f', format, url], './downloads');
   }
 
   private toCamel(o) {

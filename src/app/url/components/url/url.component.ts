@@ -1,39 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { ElectronService } from '../core/services';
-import { YoutubeDlService } from '../core/services/youtube-dl/youtube-dl.service';
-import { InitDownloadDialogComponent } from '../init-download-dialog/init-download-dialog.component';
 import * as _ from 'lodash';
-import { YoutubeDlInfo } from '../shared/models/youtube-dl-info.model';
+import { UrlFacade } from '../../+state/url.facade';
+import { Format } from '../../../shared/models/youtube-dl-info.model';
+import { UrlDetailsComponent } from '../url-details/url-details.component';
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-url',
+  templateUrl: './url.component.html',
+  styleUrls: ['./url.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class UrlComponent implements OnInit {
   url = 'https://www.youtube.com/watch?v=mzmkEqyOaqo';
   output = '';
 
   constructor(
-    private router: Router,
-    private youtubeDlService: YoutubeDlService,
-    public dialog: MatDialog
-  ) {
+    private dialog: MatDialog,
+    private urlFacade: UrlFacade, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
-    // this.go();
+    this.urlFacade.urlInfo$.subscribe(info => {
+      if (info) {
+        this.ngZone.run(() =>
+          this.dialog.open(UrlDetailsComponent, {
+            data: info,
+          })
+        ).afterClosed().subscribe((format: Format) => console.log(format));
+      }
+    });
   }
 
-  async go() {
-    this.output = '';
-    const info: YoutubeDlInfo = await this.youtubeDlService.getInfo(this.url);
-    this.dialog.open(InitDownloadDialogComponent, {
-      data: info,
-    });
+  go() {
+    this.urlFacade.loadUrlInfo(this.url);
   }
 
   toCamel(o) {

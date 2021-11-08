@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InitDownloadDialogComponent } from './init-download-dialog.component';
+import { DownloadSummaryComponent } from './download-summary.component';
 
-describe('InitDownloadDialogComponent', () => {
-  let component: InitDownloadDialogComponent;
-  let fixture: ComponentFixture<InitDownloadDialogComponent>;
+describe('DownloadSummaryComponent', () => {
+  let component: DownloadSummaryComponent;
+  let fixture: ComponentFixture<DownloadSummaryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InitDownloadDialogComponent ]
+      declarations: [ DownloadSummaryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InitDownloadDialogComponent);
+    fixture = TestBed.createComponent(DownloadSummaryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
